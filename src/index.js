@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+// import App from './App';
+import TodoList from './TodoList'
 import * as serviceWorker from './serviceWorker';
+
+// JSX 语法 <App/> 如果我们要使用自己创建的组件，组件开头必须大写
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <TodoList />
   </React.StrictMode>,
   document.getElementById('root')
 );
