@@ -1,6 +1,6 @@
 import React,{Component,Fragment} from 'react'
-import './style.css'
 import TodoItem from './TodoItem'
+import './style.css'
 //使用</Fragment> 占位符解决最外层多一层div嵌套的问题
 class TodoList extends Component{
     //构造函数 
@@ -11,6 +11,9 @@ class TodoList extends Component{
             inputValue:'',
             list:[]
         }
+        this.handleBtnClick = this.handleBtnClick.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleItemDelete = this.handleItemDelete.bind(this)
     }
     render(){
         return(
@@ -21,66 +24,77 @@ class TodoList extends Component{
                         id="insertArea"
                         className='input'
                         value={this.state.inputValue} 
-                        onChange={this.handleInputChange.bind(this)}
+                        onChange={this.handleInputChange}
                         />
-                    <button onClick={this.handleBtnClick.bind(this)} >提交</button>
+                    <button onClick={this.handleBtnClick} >提交</button>
                 </div>
                 <ul >
-                    {
-                        this.state.list.map((item, index)=>{
-                            return(
-                                <div>
-                                    <TodoItem 
-                                        content={item} 
-                                        index={index}
-                                        deleteItem={this.handleItemDelete.bind(this)}
-                                        /> 
-                                    {/*<li key={index} 
-                                    onClick={this.handleItemDelete.bind(this,index)}
-                                    >
-                                        {item}
-                                    </li>
-                                */}
-                                </div> 
-                            )
-                    })
-                    }
+                    { this.getTodoItem() }
                 </ul>
             </Fragment>
         )
     }
+    getTodoItem() {
+        return this.state.list.map((item, index)=>{
+            return(
+                    <TodoItem
+                        key={index} 
+                        content={item} 
+                        index={index}
+                        deleteItem={this.handleItemDelete}
+                        /> 
+            )
+        })
+    }
     handleInputChange(e){
         //console.log(e.target.value);
-
         //this is undefined，通过es6的bind更改this指向
         //错误，通过setState更改数据状态
         //this.setstState.inputValue = e.target.value
 
         //setState更改数据
-        this.setState({
-            inputValue: e.target.value
-        })
+
+        //改用下方es6写法，返回一个函数
+        // this.setState({
+        //     inputValue: e.target.value
+        // })
+        
+        const value =  e.target.value
+        this.setState(() => ({
+            inputValue: value
+        }))
+
     }
 
     handleBtnClick(){
-
-        this.setState({
-            //添加数据
-            list:[...this.state.list,this.state.inputValue],
-            //清空数据
-            inputValue:''
-        })
+        // this.setState({
+        //     //添加数据
+        //     list:[...this.state.list,this.state.inputValue],
+        //     //清空数据
+        //     inputValue:''
+        // })
+        
+        // this.setState可以接收一个参数，修改之前的参数
+        this.setState((prevState) => ({
+            list: [...prevState.list, prevState.inputValue],
+            inputValue: ''
+        }))
     }
     handleItemDelete(index){
         // immutable
         // state 不允许我们直接修改数据
         // 错误写法：this.state.list.splice(index,1)
-        console.log(`${index}`)
-        const list = [...this.state.list]
-        //array.splice(start[, deleteCount[, item1[, item2[, ...]]]])
-        list.splice(index, 1)
-        this.setState({
-            list:list
+    
+        // const list = [...this.state.list]
+        // list.splice(index, 1)
+        // this.setState({
+        //     list:list
+        // })
+
+        this.setState((prevState) => {
+            const list = [...prevState.list]
+            list.splice(index,1)
+            return {list}
         })
     }
 }
