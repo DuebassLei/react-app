@@ -1,9 +1,11 @@
-import React,{Component} from 'react';
+import React,{ Component } from 'react';
+
+//等价于 const Component = React.Component
 
 class App extends Component{
   render(){
    return(
-    <div>Helo world</div>
+    <div>Hello world</div>
    )
   }
 }

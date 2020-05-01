@@ -1,5 +1,6 @@
 import React,{Component,Fragment} from 'react'
 import './style.css'
+import TodoItem from './TodoItem'
 //使用</Fragment> 占位符解决最外层多一层div嵌套的问题
 class TodoList extends Component{
     //构造函数 
@@ -27,12 +28,20 @@ class TodoList extends Component{
                 <ul >
                     {
                         this.state.list.map((item, index)=>{
-                            return( 
-                                <li key={index} 
+                            return(
+                                <div>
+                                    <TodoItem 
+                                        content={item} 
+                                        index={index}
+                                        deleteItem={this.handleItemDelete.bind(this)}
+                                        /> 
+                                    {/*<li key={index} 
                                     onClick={this.handleItemDelete.bind(this,index)}
                                     >
                                         {item}
                                     </li>
+                                */}
+                                </div> 
                             )
                     })
                     }
@@ -54,6 +63,7 @@ class TodoList extends Component{
     }
 
     handleBtnClick(){
+
         this.setState({
             //添加数据
             list:[...this.state.list,this.state.inputValue],
@@ -65,7 +75,7 @@ class TodoList extends Component{
         // immutable
         // state 不允许我们直接修改数据
         // 错误写法：this.state.list.splice(index,1)
-
+        console.log(`${index}`)
         const list = [...this.state.list]
         //array.splice(start[, deleteCount[, item1[, item2[, ...]]]])
         list.splice(index, 1)
