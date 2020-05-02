@@ -294,6 +294,92 @@ export default TodoItem
     }
 ```
 
+#### this.setState
+
+> 情况一：
+
+```js
+    this.setState({
+            inputValue: e.target.value
+        })
+```
+
+- 优化后
+
+```js
+ 	
+	const value =  e.target.value
+    //直接返回一个对象时写法 
+    this.setState(() => ({
+            inputValue: value
+        }))
+```
+
+
+
+> 情况二：
+
+```js
+        this.setState({
+            //添加数据
+            list:[...this.state.list,this.state.inputValue],
+            //清空数据
+            inputValue:''
+        })
+```
+
+- 优化后
+
+```js
+        // this.setState可以接收一个参数，修改之前的参数
+        this.setState((prevState) => ({
+            list: [...prevState.list, prevState.inputValue],
+            inputValue: ''
+        }))
+```
+
+> 情况三：
+
+```js
+    handleItemDelete(index){
+        const list = [...this.state.list]
+        list.splice(index, 1)
+        this.setState({
+            list:list
+        })
+    }
+```
+
+- 优化后
+
+```js
+handleItemDelete(index){
+    this.setState((prevState) => {
+            const list = [...prevState.list]
+            list.splice(index, 1)
+            return { list }
+        })
+}
+```
+
+## PropTypes与defaultProps
+
+
+
+```js
+//指定传递参数的数据类型,类型校验
+TodoItem.propTypes = {
+  test: PropTypes.string.isRequired,
+  content: PropTypes.string,
+  deleteItem: PropTypes.func,
+  index: PropTypes.number
+}
+//参数默认值
+TodoItem.defaultProps = {
+  test: 'hello world'
+}
+```
+
 
 
 
